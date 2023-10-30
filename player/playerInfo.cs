@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public class playerInfo : characterInfo
 {
@@ -10,6 +11,7 @@ public class playerInfo : characterInfo
     public string namePlayer;
 
     public charJob job;
+    public int cardPoint = 0;
 
     #endregion
 
@@ -54,10 +56,16 @@ public class playerInfo : characterInfo
         hp.OnValueChanged += onHpChanged;
 
     }
+    // override protected void OnDisable()
+    // {
+    //     base.OnDisable();
+    //     hp.OnValueChanged -= onHpChanged;
+
+    // }
 
     private void onHpChanged(int previousValue, int newValue)
     {
-        throw new NotImplementedException();
+
     }
 
     void Update()
