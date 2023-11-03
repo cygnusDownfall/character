@@ -4,16 +4,20 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Splines;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(AudioSource))]
 public class enemyBehavier : NetworkBehaviour
 {
     #region movement
     Transform target = null;
+    #region ref
+    [Header("----------------Ref-----------------")]
     public CharacterController controller;
-    public SplineContainer spl;
+    public AudioSource moveAudioSource;
+    public Animator animator;
     [SerializeField] Transform defaultPosition;
+    #endregion
+    [Header("---------------------state--------------------")]
     public float speed = 1;
     float t = 0;
     [SerializeField] float rangeAttack = 2f;
@@ -21,10 +25,8 @@ public class enemyBehavier : NetworkBehaviour
     {
         if (target == null)
         {
-            moveAsDefaultSpline();
             return;
         }
-
         NativeArray<float3> dir = new NativeArray<float3>(1, Allocator.TempJob);
         (float3 oldPos, float3 tarPos) = (new float3(transform.position.x, transform.position.y, transform.position.z), new float3(target.position.x, target.position.y, target.position.z));
         CalcPositionMoveJob calcPos = new CalcPositionMoveJob()
@@ -37,30 +39,27 @@ public class enemyBehavier : NetworkBehaviour
         };
         var handle = calcPos.Schedule();
         //xu li animation va sound
+        if (!moveAudioSource.isPlaying)
+        {
+            moveAudioSource.Play();
+        }
 
 
         //gan vi tri 
         handle.Complete();
-        if (controller && math.length(dir[0]) > rangeAttack)
+        if (controller && (math.length(dir[0]) > rangeAttack))
         {
             controller.Move(dir[0]);
         }
         else
         {
             target = null;
+            moveAudioSource.Stop();
         }
         dir.Dispose();
     }
 
-    void moveAsDefaultSpline()
-    {
-        t += Time.deltaTime;
-        //what range of value t
-        float sint = math.sin(t);
-        var pos = spl.EvaluatePosition(sint);
-        transform.position = new Vector3(pos.x, pos.y, pos.z);
 
-    }
 
     public void chasePlayer(GameObject go)
     {
@@ -70,7 +69,7 @@ public class enemyBehavier : NetworkBehaviour
     }
     public void returnToPosition()
     {
-        target = default;
+        target = defaultPosition;
 
     }
     #endregion
@@ -78,6 +77,7 @@ public class enemyBehavier : NetworkBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        moveAudioSource = GetComponent<AudioSource>();
     }
     void Update()
     {

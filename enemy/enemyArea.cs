@@ -50,6 +50,7 @@ public class enemyArea : MonoBehaviour
             childs[i].gameObject.transform.LookAt(plobj);
         }
 
+        //xu li cac child chase player
         handle.Complete();
         for (int i = 0; i < indexs.Length; i++)
         {
