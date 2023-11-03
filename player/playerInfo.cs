@@ -52,7 +52,6 @@ public class playerInfo : characterInfo
 
     protected override void OnEnable()
     {
-        base.OnEnable();
         hp.OnValueChanged += onHpChanged;
 
     }
