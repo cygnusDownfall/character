@@ -9,6 +9,7 @@ public class enemyArea : MonoBehaviour
 {
     enemyBehavier[] childs;
     [SerializeField] float rangeDetectOfEach = 5f;
+    public int numPlayerInArea { get; private set; }
     void loadChild()
     {
         int length = transform.childCount;
@@ -21,12 +22,17 @@ public class enemyArea : MonoBehaviour
     #region mono
     private void Start()
     {
+        //set thong so 
+        numPlayerInArea = 0;
+
+        //
         loadChild();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (!other.gameObject.TryGetComponent(out playerInfo _)) { return; }
+        numPlayerInArea++;
         float3[] float3s = childs.Select(eb => function.vector3ToFloat3(eb.gameObject.transform.position)).ToArray();
         NativeArray<float3> childPos = new NativeArray<float3>(float3s, Allocator.TempJob);
         NativeArray<int> indexs = new NativeArray<int>(childs.Length, Allocator.TempJob);
@@ -50,13 +56,20 @@ public class enemyArea : MonoBehaviour
             childs[i].gameObject.transform.LookAt(plobj);
         }
 
+        // xu li khi player ve 0 se gay ra loi 
+        if (numPlayerInArea <= 0) { return; }
         //xu li cac child chase player
         handle.Complete();
-        for (int i = 0; i < indexs.Length; i++)
+        for (int i = 0; i < numPlayerInArea; i++)
         {
             childs[indexs[i]].chasePlayer(plobj.gameObject);
         }
 
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (!other.gameObject.TryGetComponent(out playerInfo _)) { return; }
+        if (numPlayerInArea > 0) numPlayerInArea--;
     }
     #endregion
 }
