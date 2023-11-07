@@ -54,6 +54,7 @@ public class enemyArea : MonoBehaviour
         handle.Complete();
         for (int i = 0; i < indexs.Length; i++)
         {
+            Debug.Log("index chase:" + i);
             childs[indexs[i]].chasePlayer(plobj.gameObject);
         }
 

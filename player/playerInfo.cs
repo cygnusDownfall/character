@@ -83,12 +83,20 @@ public class playerInfo : characterInfo
     public void load()
     {
         saveload l = new saveload();
-        playerInfoData data = l.load<playerInfoData>("localplayerinfo");
-        if (data == default)
+        try
         {
-            return;
+            playerInfoData data = l.load<playerInfoData>("localplayerinfo");
+            if (data == default)
+            {
+                return;
+            }
+            data.copyTo(this);
         }
-        data.copyTo(this);
+        catch(Exception e)
+        {
+
+        }
+       
     }
     #endregion
 }
