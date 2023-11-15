@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -94,18 +93,35 @@ public class enemyBehavier : NetworkBehaviour
         target = defaultPosition;
 
     }
+    public void OnDie(characterInfo info)
+    {
+        animator.SetBool("die", true);
+        var meshs = GetComponentsInChildren<MeshRenderer>();
+        foreach (var mesh in meshs)
+        {
+            mesh.gameObject.GetComponent<dissolve>().RunDisolve();
+        }
+
+    }
     #endregion
     #region mono
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         moveAudioSource = GetComponent<AudioSource>();
+        gameObject.GetComponent<enemyInfo>().onDie.AddListener(OnDie);
     }
     void Update()
     {
         move();
     }
 
+    // private void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.gameObject != PlayerController.Instance.player) return;
+
+    //     chasePlayer(other.gameObject);
+    // }
     #endregion
 }
 [BurstCompile]

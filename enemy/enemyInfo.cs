@@ -15,8 +15,8 @@ public class enemyInfo : characterInfo
         hp = new Unity.Netcode.NetworkVariable<int>(maxHP * (int)enemyLevel);
         mp = maxMP;
         attack *= (int)enemyLevel;
-
     }
+
     private void Start()
     {
         loadInfo();

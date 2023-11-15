@@ -210,9 +210,6 @@ MonoBehaviour:
   moveAudioSource: {fileID: 0}
   animator: {fileID: 0}
   defaultPosition: {fileID: 0}
-  speed: 1
-  effects: []
-  rangeAttack: 2
 --- !u!114 &9047500923657164364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,3 +288,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   enemyLevel: 0
+  effectsWhenHit: []
+  rangeAttack: 1
+  nearAttackDmgType: 0
+  rangeAttackFar: 5
+  farAttackDmgType: 5
