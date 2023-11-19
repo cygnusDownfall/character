@@ -119,12 +119,7 @@ public class enemyBehavier : NetworkBehaviour
         move();
     }
 
-    // private void OnTriggerEnter(Collider other)
-    // {
-    //     if (other.gameObject != PlayerController.Instance.player) return;
-
-    //     chasePlayer(other.gameObject);
-    // }
+ 
     #endregion
 }
 [BurstCompile]

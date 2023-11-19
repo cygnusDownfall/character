@@ -15,6 +15,11 @@ public class enemyInfo : characterInfo
         mp = maxMP;
         attack *= (int)enemyLevel;
     }
+    public override void takeDamage(int dmg, DmgType dmgType)
+    {
+        base.takeDamage(dmg, dmgType);
+       // Instantiate()
+    }
 
     private void Start()
     {
