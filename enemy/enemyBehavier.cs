@@ -21,9 +21,11 @@ public class enemyBehavier : NetworkBehaviour
     [Header("---------------------state--------------------")]
     float t = 0;
     /// <summary>
-    /// 0 = near  1= far
+    /// false= near  true= far
     /// </summary>
     bool attackMode = false;
+    [Header("--------------------Event--------------------")]
+    public UnityEngine.Events.UnityEvent onAttack;
     void move()
     {
         if (target == null)
@@ -50,10 +52,10 @@ public class enemyBehavier : NetworkBehaviour
 
         //gan vi tri 
         handle.Complete();
-        var len = math.length(dir[0]);
+        var len = math.length(calcPos.dir[0]);
         if (rb && (len > info.rangeAttackFar))
         {
-            rb.velocity = dir[0];
+            rb.velocity = calcPos.dir[0];
         }
         else
         {
@@ -110,6 +112,7 @@ public class enemyBehavier : NetworkBehaviour
         rb = GetComponent<Rigidbody>();
         moveAudioSource = GetComponent<AudioSource>();
         gameObject.GetComponent<enemyInfo>().onDie.AddListener(OnDie);
+        defaultPosition = transform;
     }
     void Update()
     {
