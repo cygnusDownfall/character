@@ -18,7 +18,6 @@ public class enemyInfo : characterInfo
     public override void takeDamage(int dmg, DmgType dmgType)
     {
         base.takeDamage(dmg, dmgType);
-       // Instantiate()
     }
 
     private void Start()

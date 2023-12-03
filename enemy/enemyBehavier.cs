@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Threading.Tasks;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -9,7 +11,7 @@ using UnityEngine;
 public class enemyBehavier : NetworkBehaviour
 {
     #region movement
-    Transform target = null;
+    public Transform target = null;
     #region ref
     [Header("----------------Ref-----------------")]
     public AudioSource moveAudioSource;
@@ -23,10 +25,11 @@ public class enemyBehavier : NetworkBehaviour
     /// <summary>
     /// false= near  true= far
     /// </summary>
-    bool attackMode = false;
+    public byte seccondDelayToReturn = 3;
+    public byte distanceMaxChase = 10;
     [Header("--------------------Event--------------------")]
     public UnityEngine.Events.UnityEvent onAttack;
-    void move()
+    void moveToChasePlayer()
     {
         if (target == null)
         {
@@ -34,6 +37,8 @@ public class enemyBehavier : NetworkBehaviour
         }
         NativeArray<float3> dir = new NativeArray<float3>(1, Allocator.TempJob);
         (float3 oldPos, float3 tarPos) = (new float3(transform.position.x, transform.position.y, transform.position.z), new float3(target.position.x, target.position.y, target.position.z));
+
+        Debug.Log("old:" + oldPos + "tarPos:" + tarPos);
         CalcPositionMoveJob calcPos = new CalcPositionMoveJob()
         {
             oldPosition = oldPos,
@@ -43,6 +48,7 @@ public class enemyBehavier : NetworkBehaviour
             speed = info.speed,
         };
         var handle = calcPos.Schedule();
+        Debug.Log("moveAudio: " + moveAudioSource != null);
         //xu li animation va sound
         if (!moveAudioSource.isPlaying)
         {
@@ -53,51 +59,74 @@ public class enemyBehavier : NetworkBehaviour
         //gan vi tri 
         handle.Complete();
         var len = math.length(calcPos.dir[0]);
-        if (rb && (len > info.rangeAttackFar))
+        Debug.Log("calc dir " + calcPos.dir[0]);
+        //
+        if (len > distanceMaxChase)
+        {
+            //
+            returnToPosition();
+
+        }
+        else if (rb && (len > info.rangeAttackFar))
         {
             rb.velocity = calcPos.dir[0];
         }
+        else if (len > info.rangeAttack)
+        {
+            attack();
+
+        }
         else
         {
-            target = null;
-            moveAudioSource.Stop();
-            attack();
+
         }
+
         dir.Dispose();
     }
 
-    void attack()
+    /// <param name="attackMode">true is far and false is near </param>
+    void attack(bool attackMode = true)
     {
         //play animation
-        //goi effect 
+        moveAudioSource.Stop();
         if (attackMode)
         {
             animator.SetTrigger("attackFar");
         }
         else
         {
-            animator.SetTrigger("attackFar");
+            animator.SetTrigger("attack");
         }
     }
-    void attackHit(playerInfo player)
+    void attackHit(playerInfo player, bool attackMode = true)
     {
         player.takeDamage(info.attack, attackMode ? info.farAttackDmgType : info.nearAttackDmgType);
     }
 
-    public void chasePlayer(GameObject go)
+    public void chasePlayer(Transform go)
     {
-        if (!target) return;
-
-        target = go.transform;
+        if (target != null) return;
+        Debug.Log("chase player:" + go);
+        target = go;
     }
-    public void returnToPosition()
+    public Task returnToPosition()
     {
-        target = defaultPosition;
+        Task.Delay(seccondDelayToReturn);
+        return Task.Run(
+            () =>
+            {
+
+                if (defaultPosition != null)
+                {
+                    transform.position = defaultPosition.position;
+                }
+            }
+        );
 
     }
     public void OnDie(characterInfo info)
     {
-        animator.SetBool("die", true);
+        //animator.SetBool("die", true);
         var meshs = GetComponentsInChildren<MeshRenderer>();
         foreach (var mesh in meshs)
         {
@@ -111,15 +140,21 @@ public class enemyBehavier : NetworkBehaviour
     {
         rb = GetComponent<Rigidbody>();
         moveAudioSource = GetComponent<AudioSource>();
-        gameObject.GetComponent<enemyInfo>().onDie.AddListener(OnDie);
+        info = gameObject.GetComponent<enemyInfo>();
+        info.onDie.AddListener(OnDie);
         defaultPosition = transform;
     }
     void Update()
     {
-        move();
+        moveToChasePlayer();
     }
 
- 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject != PlayerController.Instance.player) { return; }
+
+    }
+
     #endregion
 }
 [BurstCompile]
@@ -127,9 +162,15 @@ public struct CalcPositionMoveJob : IJob
 {
     public float3 oldPosition;
     public float3 targetPos;
+    /// <summary>
+    /// dir after calculate and have normalized 
+    /// </summary>
     [WriteOnly] public NativeArray<float3> dir;
     public float timeDelta;
     public float speed;
+    /// <summary>
+    /// 
+    /// </summary>
     public void Execute()
     {
         float3 dir3 = targetPos - oldPosition;

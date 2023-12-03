@@ -5,8 +5,8 @@ public class enemyArea : NetworkObjectPool
 {
     enemyBehavier[] childs;
     [SerializeField] float rangeDetectOfEach = 5f;
-    [SerializeField] Stack<GameObject> chaseStack;
-    [SerializeField] GameObject currentPlayerChase;
+    [SerializeField] Transform seccondChase;
+    [SerializeField] Transform currentPlayerChase;
     void loadChild()
     {
         int length = transform.childCount;
@@ -14,37 +14,46 @@ public class enemyArea : NetworkObjectPool
         for (int i = 0; i < length; i++)
         {
             childs[i] = transform.GetChild(i).gameObject.GetComponent<enemyBehavier>();
+            Debug.Log("childs " + i + " : " + childs[i].name);
         }
     }
-    void chase(GameObject go)
+    void chase(Transform go)
     {
-
+        Debug.Log("chase player " + go.name);
+        for (int i = 0; i < childs.Length; i++)
+        {
+            childs[i].chasePlayer(go);
+        }
     }
     #region mono
     private void Start()
     {
-        //
         loadChild();
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("trigger enter ::" + other);
         //tat ca deu xoay nhin player? 
         var plobj = other.gameObject.transform;
+        Debug.Log("childs cout :" + childs.Length);
         for (int i = 0; i < childs.Length; i++)
         {
             childs[i].gameObject.transform.LookAt(plobj);
         }
-        if (!other.gameObject.TryGetComponent(out Character1ControlSystem _)) return;
+        // comment to test under line
+        //if (other.gameObject != PlayerController.Instance.player) return;
+        if (!other.gameObject.TryGetComponent(out ControllReceivingSystem _)) return;
         //xu li cac child chase player
         if (currentPlayerChase == null)
         {
-            chase(other.gameObject);
-            currentPlayerChase = other.gameObject;
+            currentPlayerChase = other.gameObject.transform;
+            chase(currentPlayerChase);
         }
         else
         {
-            chaseStack.Push(other.gameObject);
+            Debug.Log("da track player khac nen se them vao second chase");
+            seccondChase = other.gameObject.transform;
         }
 
 
@@ -53,14 +62,13 @@ public class enemyArea : NetworkObjectPool
     private void OnTriggerExit(Collider other)
     {
         if (!other.gameObject.TryGetComponent(out Character1ControlSystem _)) return;
-        if (chaseStack.Count <= 0)
+        if (seccondChase == null)
         {
             currentPlayerChase = null;
             return;
         }
-        GameObject chasePl = chaseStack.Pop();
-        chase(chasePl);
-        currentPlayerChase = chasePl;
+        chase(seccondChase);
+        currentPlayerChase = seccondChase;
     }
     #endregion
 }
