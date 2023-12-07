@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class enemyArea : NetworkObjectPool
@@ -9,13 +8,7 @@ public class enemyArea : NetworkObjectPool
     [SerializeField] Transform currentPlayerChase;
     void loadChild()
     {
-        int length = transform.childCount;
-        childs = new enemyBehavier[length];
-        for (int i = 0; i < length; i++)
-        {
-            childs[i] = transform.GetChild(i).gameObject.GetComponent<enemyBehavier>();
-            Debug.Log("childs " + i + " : " + childs[i].name);
-        }
+        childs = GetComponentsInChildren<enemyBehavier>();
     }
     void chase(Transform go)
     {
@@ -23,6 +16,13 @@ public class enemyArea : NetworkObjectPool
         for (int i = 0; i < childs.Length; i++)
         {
             childs[i].chasePlayer(go);
+        }
+    }
+    void unchase()
+    {
+        for (int i = 0; i < childs.Length; i++)
+        {
+            childs[i].returnToPosition();
         }
     }
     #region mono
@@ -42,8 +42,8 @@ public class enemyArea : NetworkObjectPool
             childs[i].gameObject.transform.LookAt(plobj);
         }
         // comment to test under line
-        //if (other.gameObject != PlayerController.Instance.player) return;
-        if (!other.gameObject.TryGetComponent(out ControllReceivingSystem _)) return;
+        if (other.gameObject != PlayerController.Instance.player) return;
+        //if (!other.gameObject.TryGetComponent(out ControllReceivingSystem _)) return;
         //xu li cac child chase player
         if (currentPlayerChase == null)
         {
@@ -54,17 +54,19 @@ public class enemyArea : NetworkObjectPool
         {
             Debug.Log("da track player khac nen se them vao second chase");
             seccondChase = other.gameObject.transform;
+
         }
-
-
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (!other.gameObject.TryGetComponent(out Character1ControlSystem _)) return;
+        if (other.gameObject != PlayerController.Instance.player) return;
+
+        //if (!other.gameObject.TryGetComponent(out Character1ControlSystem _)) return;
         if (seccondChase == null)
         {
             currentPlayerChase = null;
+            unchase();
             return;
         }
         chase(seccondChase);

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Threading.Tasks;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -19,27 +17,34 @@ public class enemyBehavier : NetworkBehaviour
     enemyInfo info;
     public Animator animator;
     [SerializeField] Transform defaultPosition;
+    CalcPositionMoveJob calcPos;
+    JobHandle handle;
+    NativeArray<float3> dir;
     #endregion
     [Header("---------------------state--------------------")]
-    float t = 0;
+    private float lastAttackTime;
+    private float delayBeforeNextAttack = 1;
     /// <summary>
     /// false= near  true= far
-    /// </summary>
-    public byte seccondDelayToReturn = 3;
+    /// </summary>x
     public byte distanceMaxChase = 10;
+    public float adjustYAxisTargetWhenMove = 1;
     [Header("--------------------Event--------------------")]
-    public UnityEngine.Events.UnityEvent onAttack;
+    public UnityEngine.Events.UnityEvent<bool> onAttack;
     void moveToChasePlayer()
     {
         if (target == null)
         {
             return;
         }
-        NativeArray<float3> dir = new NativeArray<float3>(1, Allocator.TempJob);
-        (float3 oldPos, float3 tarPos) = (new float3(transform.position.x, transform.position.y, transform.position.z), new float3(target.position.x, target.position.y, target.position.z));
+        if (target != PlayerController.Instance.player) return;
+        // length = 2 for 2 element is dir after calc and origin 
+        dir = new NativeArray<float3>(2, Allocator.TempJob);
+        function.LookAtNegXAxis(transform, target.position + Vector3.up);
+        (float3 oldPos, float3 tarPos) = (function.vector3ToFloat3(transform.position), function.vector3ToFloat3(target.position));
 
-        Debug.Log("old:" + oldPos + "tarPos:" + tarPos);
-        CalcPositionMoveJob calcPos = new CalcPositionMoveJob()
+        Debug.Log("obj: " + this.gameObject + "\told:" + oldPos + "tarPos:" + tarPos);
+        calcPos = new CalcPositionMoveJob()
         {
             oldPosition = oldPos,
             dir = dir,
@@ -47,43 +52,58 @@ public class enemyBehavier : NetworkBehaviour
             timeDelta = Time.deltaTime,
             speed = info.speed,
         };
-        var handle = calcPos.Schedule();
-        Debug.Log("moveAudio: " + moveAudioSource != null);
+        handle = calcPos.Schedule();
         //xu li animation va sound
         if (!moveAudioSource.isPlaying)
         {
             moveAudioSource.Play();
         }
-
+    }
+    void handleAfterCalcPos()
+    {
+        if (target == null)
+        {
+            return;
+        }
+        if (target != PlayerController.Instance.player) return;
 
         //gan vi tri 
         handle.Complete();
-        var len = math.length(calcPos.dir[0]);
-        Debug.Log("calc dir " + calcPos.dir[0]);
+        var len = math.length(calcPos.dir[1]);
+        Debug.Log("after calc of obj: " + this.gameObject);
         //
         if (len > distanceMaxChase)
         {
-            //
+            Debug.Log("return to default position. Len:" + len);
             returnToPosition();
 
         }
-        else if (rb && (len > info.rangeAttackFar))
+        else if (len > info.rangeAttackFar)
         {
-            rb.velocity = calcPos.dir[0];
+            Debug.Log("move");
+            transform.position = function.float3ToVector3(calcPos.dir[0]);
         }
         else if (len > info.rangeAttack)
         {
-            attack();
-
+            Debug.Log("move and far attack");
+            transform.position = function.float3ToVector3(calcPos.dir[0]) + Vector3.up * adjustYAxisTargetWhenMove;
+            if (Time.time - lastAttackTime > delayBeforeNextAttack)
+            {
+                attack();
+                lastAttackTime = Time.time;
+            }
         }
         else
         {
-
+            if (Time.time - lastAttackTime > delayBeforeNextAttack)
+            {
+                attack(false);
+                lastAttackTime = Time.time;
+            }
         }
 
         dir.Dispose();
     }
-
     /// <param name="attackMode">true is far and false is near </param>
     void attack(bool attackMode = true)
     {
@@ -97,32 +117,43 @@ public class enemyBehavier : NetworkBehaviour
         {
             animator.SetTrigger("attack");
         }
-    }
-    void attackHit(playerInfo player, bool attackMode = true)
-    {
-        player.takeDamage(info.attack, attackMode ? info.farAttackDmgType : info.nearAttackDmgType);
-    }
+        onAttack.Invoke(attackMode);
 
+
+    }
     public void chasePlayer(Transform go)
     {
         if (target != null) return;
         Debug.Log("chase player:" + go);
         target = go;
     }
-    public Task returnToPosition()
+    public void returnToPosition()
     {
-        Task.Delay(seccondDelayToReturn);
-        return Task.Run(
-            () =>
-            {
+        StartCoroutine(waitToSetReturnPos());
+    }
+    private System.Collections.IEnumerator waitToSetReturnPos()
+    {
+        var mesh = GetComponentInChildren<MeshRenderer>();
+        while (IsMeshVisible(mesh))
+        {
+            yield return new WaitForSeconds(1);
+        }
+        target = null;
+        if (defaultPosition != null)
+        {
+            transform.position = defaultPosition.position;
+        }
+    }
+    private bool IsMeshVisible(MeshRenderer targetMeshRenderer)
+    {
+        if (targetMeshRenderer == null)
+        {
+            Debug.LogWarning("Target MeshRenderer not assigned!");
+            return false;
+        }
 
-                if (defaultPosition != null)
-                {
-                    transform.position = defaultPosition.position;
-                }
-            }
-        );
-
+        // Check if the mesh is visible from any camera
+        return GeometryUtility.TestPlanesAABB(GeometryUtility.CalculateFrustumPlanes(Camera.main), targetMeshRenderer.bounds);
     }
     public void OnDie(characterInfo info)
     {
@@ -142,18 +173,17 @@ public class enemyBehavier : NetworkBehaviour
         moveAudioSource = GetComponent<AudioSource>();
         info = gameObject.GetComponent<enemyInfo>();
         info.onDie.AddListener(OnDie);
-        defaultPosition = transform;
+        defaultPosition = transform.parent;
     }
     void Update()
     {
         moveToChasePlayer();
     }
-
-    private void OnTriggerEnter(Collider other)
+    private void LateUpdate()
     {
-        if (other.gameObject != PlayerController.Instance.player) { return; }
-
+        handleAfterCalcPos();
     }
+
 
     #endregion
 }
@@ -163,7 +193,7 @@ public struct CalcPositionMoveJob : IJob
     public float3 oldPosition;
     public float3 targetPos;
     /// <summary>
-    /// dir after calculate and have normalized 
+    /// dir[0] have normalized and then calculate, dir[1] is Raw dir from oldPos to targetPos
     /// </summary>
     [WriteOnly] public NativeArray<float3> dir;
     public float timeDelta;
@@ -174,7 +204,9 @@ public struct CalcPositionMoveJob : IJob
     public void Execute()
     {
         float3 dir3 = targetPos - oldPosition;
+        dir[1] = dir3;
         dir3 = math.normalize(dir3);
-        dir[0] = speed * dir3 * timeDelta;
+        dir[0] = oldPosition + dir3 * speed * timeDelta;
     }
+
 }

@@ -13,21 +13,22 @@ ModelImporter:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
-    optimizeGameObjects: 0
+    optimizeGameObjects: 1
     removeConstantScaleCurves: 0
     motionNodeName: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    importAnimatedCustomProperties: 0
+    importAnimatedCustomProperties: 1
     importConstraints: 1
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
-    extraExposedTransformPaths: []
+    extraExposedTransformPaths:
+    - dragonflyAm
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
@@ -151,7 +152,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 0.3
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importPhysicalCameras: 1
@@ -169,7 +170,7 @@ ModelImporter:
     bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
-    maxBonesPerVertex: 4
+    maxBonesPerVertex: 15
     minBoneWeight: 0.001
     optimizeBones: 1
     meshOptimizationFlags: -1
@@ -196,7 +197,97 @@ ModelImporter:
   humanDescription:
     serializedVersion: 3
     human: []
-    skeleton: []
+    skeleton:
+    - name: dfCl(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Icosphere
+      parentName: dfCl(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.70710677, y: -0.000000015454312, z: -0.00000001545431, w: 0.7071068}
+      scale: {x: 100, y: 100, z: 100}
+    - name: Cube
+      parentName: dfCl(Clone)
+      position: {x: -1.1483229, y: -0.25085643, z: 0.019309202}
+      rotation: {x: -0.70537436, y: -0.049467444, z: 0.049467478, w: 0.7053744}
+      scale: {x: 100, y: 100, z: 100}
+    - name: Wing
+      parentName: dfCl(Clone)
+      position: {x: 0.00031009913, y: 0.02095948, z: 0}
+      rotation: {x: -0.70537436, y: -0.049467444, z: 0.049467478, w: 0.7053744}
+      scale: {x: 100, y: 100, z: 100}
+    - name: dragonflyAm
+      parentName: dfCl(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071067, y: 0, z: -0, w: 0.7071068}
+      scale: {x: 100, y: 100, z: 100}
+    - name: Bone
+      parentName: dragonflyAm
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.5100924, y: -0.48969954, z: 0.48969966, w: 0.51009256}
+      scale: {x: 0.99999994, y: 0.9999999, z: 1.0000001}
+    - name: Bone.001
+      parentName: Bone
+      position: {x: -1.1175838e-11, y: 0.003, z: 2.6645353e-18}
+      rotation: {x: 0.0000001490116, y: 0.000000059604638, z: -0.5201251, w: 0.85409003}
+      scale: {x: 1.0000002, y: 1, z: 1.0000002}
+    - name: Bone.002
+      parentName: Bone.001
+      position: {x: 8.4102794e-11, y: 0.0028361445, z: -1.0477379e-12}
+      rotation: {x: -0.000000075623426, y: 0.00000012815254, z: -0.0023459196, w: 0.99999726}
+      scale: {x: 1.000001, y: 1.000001, z: 0.9999998}
+    - name: Bone.003
+      parentName: Bone.002
+      position: {x: -2.514571e-11, y: 0.0025227221, z: 0}
+      rotation: {x: 0.029558731, y: 0.0036063553, z: 0.030417109, w: 0.99909365}
+      scale: {x: 1.0000006, y: 1.000001, z: 0.9999999}
+    - name: Bone.004
+      parentName: Bone.003
+      position: {x: 1.5925616e-10, y: 0.0029117179, z: -1.7881394e-10}
+      rotation: {x: -0.025690744, y: 0.007601894, z: 0.33931023, w: 0.94029295}
+      scale: {x: 0.9999993, y: 0.9999992, z: 0.99999976}
+    - name: Bone.005
+      parentName: Bone.004
+      position: {x: -5.3364785e-10, y: 0.0024777194, z: 8.940697e-11}
+      rotation: {x: 0.001519993, y: 0.00029810471, z: 0.112794235, w: 0.99361724}
+      scale: {x: 1.0000011, y: 1.0000011, z: 1.0000004}
+    - name: Bone.006
+      parentName: Bone.005
+      position: {x: 9.7788874e-11, y: 0.0020719892, z: 8.940697e-11}
+      rotation: {x: 0.0071593453, y: 0.005592875, z: 0.07632038, w: 0.997042}
+      scale: {x: 1.0000004, y: 1.0000008, z: 0.9999999}
+    - name: Bone.007
+      parentName: Bone.006
+      position: {x: -8.2422047e-10, y: 0.0018286356, z: 2.682209e-10}
+      rotation: {x: -0.037027262, y: 0.0006013526, z: 0.016227018, w: 0.9991824}
+      scale: {x: 1.0000007, y: 1.000001, z: 0.99999946}
+    - name: Bone.009
+      parentName: Bone
+      position: {x: 0.000033303313, y: -0.00081602705, z: -0.0022017858}
+      rotation: {x: 0.8218351, y: 0.17231764, z: 0.11870991, w: -0.52990717}
+      scale: {x: 1.0000008, y: 1.0000004, z: 1.0000008}
+    - name: Bone.008
+      parentName: Bone
+      position: {x: -0.00003645598, y: 0.00089328765, z: -0.0022860859}
+      rotation: {x: -0.49318513, y: -0.059286416, z: -0.11229998, w: 0.8606058}
+      scale: {x: 1.0000001, y: 1.0000005, z: 1.0000002}
+    - name: Bone.010
+      parentName: Bone
+      position: {x: 0.0000104814335, y: -0.00025683138, z: 0.0021610565}
+      rotation: {x: -0.070499375, y: -0.49985522, z: -0.83873904, w: 0.20418516}
+      scale: {x: 1.0000001, y: 1.0000004, z: 1.0000001}
+    - name: Bone.011
+      parentName: Bone
+      position: {x: -0.000059277863, y: 0.0014524828, z: 0.0020767567}
+      rotation: {x: 0.08293768, y: 0.84559953, z: 0.5158769, w: -0.109333515}
+      scale: {x: 1.0000004, y: 1.0000001, z: 1.0000005}
+    - name: Bone.012
+      parentName: dragonflyAm
+      position: {x: 0.010277546, y: -0.000007798372, z: -0.0052714515}
+      rotation: {x: 0.5100924, y: -0.48969954, z: 0.48969966, w: 0.51009256}
+      scale: {x: 0.99999994, y: 0.9999999, z: 1.0000001}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -207,7 +298,7 @@ ModelImporter:
     globalScale: 0.3
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
