@@ -1,6 +1,6 @@
 using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
-public class enemyArea : NetworkObjectPool
+public class enemyArea : MonoBehaviour
 {
     enemyBehavier[] childs;
     [SerializeField] float rangeDetectOfEach = 5f;
@@ -33,17 +33,17 @@ public class enemyArea : NetworkObjectPool
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject != PlayerController.Instance.player) return;
         Debug.Log("trigger enter ::" + other);
         //tat ca deu xoay nhin player? 
         var plobj = other.gameObject.transform;
         Debug.Log("childs cout :" + childs.Length);
         for (int i = 0; i < childs.Length; i++)
         {
-            childs[i].gameObject.transform.LookAt(plobj);
+            function.LookAtNegXAxis(childs[i].gameObject.transform, plobj.transform.position);
         }
-        // comment to test under line
+
         if (other.gameObject != PlayerController.Instance.player) return;
-        //if (!other.gameObject.TryGetComponent(out ControllReceivingSystem _)) return;
         //xu li cac child chase player
         if (currentPlayerChase == null)
         {
@@ -61,8 +61,6 @@ public class enemyArea : NetworkObjectPool
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject != PlayerController.Instance.player) return;
-
-        //if (!other.gameObject.TryGetComponent(out Character1ControlSystem _)) return;
         if (seccondChase == null)
         {
             currentPlayerChase = null;

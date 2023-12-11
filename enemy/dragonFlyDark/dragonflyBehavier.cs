@@ -1,43 +1,47 @@
+using TMPro;
 using Unity.Netcode.Components;
 using UnityEngine;
 
 [RequireComponent(typeof(enemyBehavier), typeof(NetworkTransform))]
 public class dragonflyBehavier : MonoBehaviour, iEnemySPBehaviour
 {
-    public GameObject rangeObj;
+    [SerializeField] float speedIncreasePerAttack = 0.2f;
 
     //------Ref-----
-    skillObj rangeSkill;
     enemyInfo info;
     enemyBehavier behavier;
 
     private bool playerIsInRange;
 
     public string detail { get => "Mỗi lần tấn công sẽ tăng tốc độ di chuyển"; }
+    #region mono
     private void Start()
     {
         info = GetComponent<enemyInfo>();
         behavier = GetComponent<enemyBehavier>();
-        rangeSkill ??= rangeObj.GetComponent<skillObj>();
-        rangeSkill.triggerEnter.AddListener((g1, g2) =>
-        {
-            if (g2 != PlayerController.Instance.player) return;
-            playerIsInRange = true;
 
-        });
-        rangeSkill.triggerExit.AddListener((g1, g2) =>
-        {
-            if (g2 != PlayerController.Instance.player) return;
-            playerIsInRange = false;
-
-        }
-        );
 
         behavier.onAttack.AddListener(attackHandle);
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject != PlayerController.Instance.player) return;
+        playerIsInRange = true;
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject != PlayerController.Instance.player) return;
+        playerIsInRange = false;
+    }
+    private void OnDisable()
+    {
+        behavier.onAttack.RemoveListener(increaseSpeed);
+    }
+    #endregion
     public void attackHandle(bool attackMode)
     {
         if (!playerIsInRange) return;
+        // player o trong pham vi 
         increaseSpeed();
         PlayerController.Instance.playerInfo.takeDamage(info.attack, attackMode ? info.farAttackDmgType : info.nearAttackDmgType);
     }
@@ -47,8 +51,5 @@ public class dragonflyBehavier : MonoBehaviour, iEnemySPBehaviour
         info.speed += 1;
     }
 
-    private void OnDisable()
-    {
-        behavier.onAttack.RemoveListener(increaseSpeed);
-    }
+
 }

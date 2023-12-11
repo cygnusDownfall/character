@@ -9,14 +9,9 @@ public class playerInfo : characterInfo
     #endregion
     #region socialStatus
     public string namePlayer;
-
     public charJob job;
     public int cardPoint = 0;
-
     #endregion
-
-
-
     #region needed for skill access
 
     public override void healing(int heal)
@@ -48,29 +43,40 @@ public class playerInfo : characterInfo
     void Start()
     {
         load();
+        onDie.AddListener((info) =>
+        {
+            StartCoroutine(playerReLifePoint.current.ReSpawn());
+        });
     }
 
     protected override void OnEnable()
     {
+        base.OnEnable();
         hp.OnValueChanged += onHpChanged;
 
     }
-    // override protected void OnDisable()
-    // {
-    //     base.OnDisable();
-    //     hp.OnValueChanged -= onHpChanged;
-
-    // }
+    override protected void OnDisable()
+    {
+        base.OnDisable();
+        hp.OnValueChanged -= onHpChanged;
+    }
 
     private void onHpChanged(int previousValue, int newValue)
     {
-
+        Debug.Log("hp changed:from " + previousValue + " to " + newValue);
+        hpBar.Instance.Value = newValue / (float)maxHP;
     }
 
     void Update()
     {
     }
     #endregion
+
+    public void resetStatus()
+    {
+        hp.Value = maxHP;
+        mp = maxMP;
+    }
 
     #region saveload
     public void save()
@@ -79,6 +85,7 @@ public class playerInfo : characterInfo
         playerInfoData data = new playerInfoData();
         data.setInfo(this);
         s.save("localplayerinfo", data);
+
     }
     public void load()
     {
@@ -92,11 +99,11 @@ public class playerInfo : characterInfo
             }
             data.copyTo(this);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
-
+            Debug.Log("can not load from file " + e.Message);
         }
-       
+
     }
     #endregion
 }

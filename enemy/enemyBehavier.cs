@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody), typeof(AudioSource), typeof(enemyInfo))]
+[RequireComponent(typeof(Rigidbody), typeof(enemyInfo))]
 public class enemyBehavier : NetworkBehaviour
 {
     #region movement
@@ -13,7 +13,6 @@ public class enemyBehavier : NetworkBehaviour
     #region ref
     [Header("----------------Ref-----------------")]
     public AudioSource moveAudioSource;
-    Rigidbody rb;
     enemyInfo info;
     public Animator animator;
     [SerializeField] Transform defaultPosition;
@@ -37,13 +36,14 @@ public class enemyBehavier : NetworkBehaviour
         {
             return;
         }
-        if (target != PlayerController.Instance.player) return;
+        if (!target.Equals(PlayerController.Instance.player.transform)) return;
         // length = 2 for 2 element is dir after calc and origin 
         dir = new NativeArray<float3>(2, Allocator.TempJob);
-        function.LookAtNegXAxis(transform, target.position + Vector3.up);
+        //function.LookAtNegXAxis(transform, target.position + Vector3.up);
+        transform.LookAt(target.position + Vector3.up * adjustYAxisTargetWhenMove);
         (float3 oldPos, float3 tarPos) = (function.vector3ToFloat3(transform.position), function.vector3ToFloat3(target.position));
 
-        Debug.Log("obj: " + this.gameObject + "\told:" + oldPos + "tarPos:" + tarPos);
+        //Debug.Log("obj: " + this.gameObject + "\told:" + oldPos + "tarPos:" + tarPos); 
         calcPos = new CalcPositionMoveJob()
         {
             oldPosition = oldPos,
@@ -65,7 +65,7 @@ public class enemyBehavier : NetworkBehaviour
         {
             return;
         }
-        if (target != PlayerController.Instance.player) return;
+        if (!target.Equals(PlayerController.Instance.player.transform)) return;
 
         //gan vi tri 
         handle.Complete();
@@ -138,10 +138,12 @@ public class enemyBehavier : NetworkBehaviour
         {
             yield return new WaitForSeconds(1);
         }
+        Debug.Log("return to default pos:" + transform.position);
         target = null;
         if (defaultPosition != null)
         {
             transform.position = defaultPosition.position;
+            transform.rotation = defaultPosition.rotation;
         }
     }
     private bool IsMeshVisible(MeshRenderer targetMeshRenderer)
@@ -169,11 +171,10 @@ public class enemyBehavier : NetworkBehaviour
     #region mono
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        moveAudioSource = GetComponent<AudioSource>();
+        moveAudioSource = GetComponentInParent<AudioSource>();
         info = gameObject.GetComponent<enemyInfo>();
         info.onDie.AddListener(OnDie);
-        defaultPosition = transform.parent;
+        transform.position = defaultPosition.position;
     }
     void Update()
     {
@@ -199,7 +200,7 @@ public struct CalcPositionMoveJob : IJob
     public float timeDelta;
     public float speed;
     /// <summary>
-    /// 
+    /// calculate new position and save to dir[0], directionand save to dir[1]
     /// </summary>
     public void Execute()
     {
