@@ -14,7 +14,7 @@ public class enemyBehavier : NetworkBehaviour
     [Header("----------------Ref-----------------")]
     public AudioSource moveAudioSource;
     enemyInfo info;
-    public Animator animator;
+    public Unity.Netcode.Components.NetworkAnimator animator;
     [SerializeField] Transform defaultPosition;
     CalcPositionMoveJob calcPos;
     JobHandle handle;
@@ -129,6 +129,7 @@ public class enemyBehavier : NetworkBehaviour
     }
     public void returnToPosition()
     {
+        target = null;
         StartCoroutine(waitToSetReturnPos());
     }
     private System.Collections.IEnumerator waitToSetReturnPos()
@@ -139,7 +140,7 @@ public class enemyBehavier : NetworkBehaviour
             yield return new WaitForSeconds(1);
         }
         Debug.Log("return to default pos:" + transform.position);
-        target = null;
+
         if (defaultPosition != null)
         {
             transform.position = defaultPosition.position;
@@ -175,6 +176,8 @@ public class enemyBehavier : NetworkBehaviour
         info = gameObject.GetComponent<enemyInfo>();
         info.onDie.AddListener(OnDie);
         transform.position = defaultPosition.position;
+        animator = GetComponent<Unity.Netcode.Components.NetworkAnimator>();
+        animator.Animator = GetComponent<Animator>();
     }
     void Update()
     {

@@ -268,7 +268,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   moveAudioSource: {fileID: 0}
-  animator: {fileID: 1037032618896588980}
+  animator: {fileID: 1329990784870573752}
   defaultPosition: {fileID: 0}
   distanceMaxChase: 50
   adjustYAxisTargetWhenMove: 0.7
@@ -350,6 +350,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onAttacked:
     m_PersistentCalls:
       m_Calls: []
   enemyLevel: 1

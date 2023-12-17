@@ -1,8 +1,6 @@
-using TMPro;
-using Unity.Netcode.Components;
 using UnityEngine;
 
-[RequireComponent(typeof(enemyBehavier), typeof(NetworkTransform))]
+[RequireComponent(typeof(enemyBehavier), typeof(clientNetworkTransform))]
 public class dragonflyBehavier : MonoBehaviour, iEnemySPBehaviour
 {
     [SerializeField] float speedIncreasePerAttack = 0.2f;

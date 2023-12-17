@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-
+[Serializable]
 public class playerInfo : characterInfo
 {
     #region BattleStatus
@@ -40,8 +40,9 @@ public class playerInfo : characterInfo
     #endregion
 
     #region monobehavior
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         load();
         onDie.AddListener((info) =>
         {
@@ -102,6 +103,7 @@ public class playerInfo : characterInfo
         catch (Exception e)
         {
             Debug.Log("can not load from file " + e.Message);
+            resetStatus();
         }
 
     }
