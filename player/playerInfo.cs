@@ -40,19 +40,14 @@ public class playerInfo : characterInfo
     #endregion
 
     #region monobehavior
-    public override void OnNetworkSpawn()
+    protected override void OnEnable()
     {
-        base.OnNetworkSpawn();
+        base.OnEnable();
         load();
         onDie.AddListener((info) =>
         {
             StartCoroutine(playerReLifePoint.current.ReSpawn());
         });
-    }
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
         hp.OnValueChanged += onHpChanged;
 
     }
