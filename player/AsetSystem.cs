@@ -1,9 +1,12 @@
+using TMPro;
 using UnityEngine;
 
-public class playerAssetEffect : Singleton<playerAssetEffect>
+public class playerGeneralInfo : Singleton<playerGeneralInfo>
 {
-    //public static playerAssetEffect ins;
+    //public static playerGeneralInfo ins;
     public GameObject dmgShowObj;
-    public byte cardPoint=0;
-    public byte maxCardPoint=100;
+    public int cardPoint = 0;
+    public byte maxCardPoint = 100;
+    public string namePlayer;
+
 }

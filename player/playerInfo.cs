@@ -1,17 +1,12 @@
 using System;
 using UnityEngine;
-[Serializable]
 public class playerInfo : characterInfo
 {
     #region BattleStatus
     public byte healScale = 100;//don vi %
     public byte recoveryMPScale = 100;//don vi %
     #endregion
-    #region socialStatus
-    public string namePlayer;
-    public charJob job;
-    public int cardPoint = 0;
-    #endregion
+
     #region needed for skill access
 
     public override void healing(int heal)
@@ -21,6 +16,7 @@ public class playerInfo : characterInfo
 
     public override void addChain(Effect effect)
     {
+        base.addChain(effect);
 
     }
     public void removeChain(Effect effect)
@@ -62,16 +58,13 @@ public class playerInfo : characterInfo
         Debug.Log("hp changed:from " + previousValue + " to " + newValue);
         hpBar.Instance.Value = newValue / (float)maxHP;
     }
-
-    void Update()
-    {
-    }
     #endregion
 
     public void resetStatus()
     {
         hp.Value = maxHP;
-        mp = maxMP;
+        gainMana((byte)(maxMP - mp));
+
     }
 
     #region saveload

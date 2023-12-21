@@ -36,12 +36,12 @@ public class enemyArea : MonoBehaviour
         if (other.gameObject != PlayerController.Instance.player) return;
         Debug.Log("trigger enter ::" + other);
         //tat ca deu xoay nhin player? 
-        var plobj = other.gameObject.transform;
-        Debug.Log("childs cout :" + childs.Length);
-        for (int i = 0; i < childs.Length; i++)
-        {
-            function.LookAtNegXAxis(childs[i].gameObject.transform, plobj.transform.position);
-        }
+        // var plobj = other.gameObject.transform;
+        // Debug.Log("childs cout :" + childs.Length);
+        // for (int i = 0; i < childs.Length; i++)
+        // {
+        //     function.LookAtXAxis(childs[i].gameObject.transform, plobj.transform.position);
+        // }
 
         if (other.gameObject != PlayerController.Instance.player) return;
         //xu li cac child chase player

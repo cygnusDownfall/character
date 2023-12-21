@@ -1,18 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class hpBarInMap : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    Slider UI;
+    public void syncValue(float value)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        UI = UI != null ? UI : GetComponentInChildren<Slider>();
+        UI.value = value;
     }
 }

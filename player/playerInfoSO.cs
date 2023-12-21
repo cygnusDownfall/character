@@ -16,9 +16,7 @@ public class playerInfoData
     public List<byte> defenseValue;
     public byte speed = 1;
 
-    public string namePlayer;
     public byte teamID;
-    public charJob job;
 
     public void setInfo(playerInfo info)
     {
@@ -32,9 +30,7 @@ public class playerInfoData
         defenseType = info.defence.Keys.ToList<DmgType>();
         defenseValue = info.defence.Values.ToList<byte>();
         speed = info.speed;
-        namePlayer = info.namePlayer;
         teamID = info.teamID;
-        job = info.job;
 
     }
     public void copyTo(playerInfo info)
@@ -53,9 +49,7 @@ public class playerInfoData
         }
         info.defence = defense;
         info.speed = speed;
-        info.namePlayer = namePlayer;
         info.teamID = teamID;
-        info.job = job;
 
     }
     public void save()
@@ -79,9 +73,7 @@ public class playerInfoData
             defenseType = res.defenseType;
             defenseValue = res.defenseValue;
             speed = res.speed;
-            namePlayer = res.namePlayer;
             teamID = res.teamID;
-            job = res.job;
         }
     }
 }

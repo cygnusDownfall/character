@@ -39,11 +39,9 @@ public class enemyBehavier : NetworkBehaviour
         if (!target.Equals(PlayerController.Instance.player.transform)) return;
         // length = 2 for 2 element is dir after calc and origin 
         dir = new NativeArray<float3>(2, Allocator.TempJob);
-        //function.LookAtNegXAxis(transform, target.position + Vector3.up);
-        transform.LookAt(target.position + Vector3.up * adjustYAxisTargetWhenMove);
+        function.LookAtXAxis(transform, target.position + Vector3.up);
         (float3 oldPos, float3 tarPos) = (function.vector3ToFloat3(transform.position), function.vector3ToFloat3(target.position));
 
-        //Debug.Log("obj: " + this.gameObject + "\told:" + oldPos + "tarPos:" + tarPos); 
         calcPos = new CalcPositionMoveJob()
         {
             oldPosition = oldPos,
@@ -70,8 +68,6 @@ public class enemyBehavier : NetworkBehaviour
         //gan vi tri 
         handle.Complete();
         var len = math.length(calcPos.dir[1]);
-        Debug.Log("after calc of obj: " + this.gameObject);
-        //
         if (len > distanceMaxChase)
         {
             Debug.Log("return to default position. Len:" + len);
@@ -80,26 +76,19 @@ public class enemyBehavier : NetworkBehaviour
         }
         else if (len > info.rangeAttackFar)
         {
-            Debug.Log("move");
             transform.position = function.float3ToVector3(calcPos.dir[0]);
         }
         else if (len > info.rangeAttack)
         {
-            Debug.Log("move and far attack");
             transform.position = function.float3ToVector3(calcPos.dir[0]) + Vector3.up * adjustYAxisTargetWhenMove;
-            if (Time.time - lastAttackTime > delayBeforeNextAttack)
-            {
-                attack();
-                lastAttackTime = Time.time;
-            }
+
+            attack();
+            lastAttackTime = Time.time;
         }
         else
         {
-            if (Time.time - lastAttackTime > delayBeforeNextAttack)
-            {
-                attack(false);
-                lastAttackTime = Time.time;
-            }
+            attack(false);
+            lastAttackTime = Time.time;
         }
 
         dir.Dispose();
@@ -107,6 +96,7 @@ public class enemyBehavier : NetworkBehaviour
     /// <param name="attackMode">true is far and false is near </param>
     void attack(bool attackMode = true)
     {
+        if (Time.time - lastAttackTime < delayBeforeNextAttack) return;
         //play animation
         moveAudioSource.Stop();
         if (attackMode)
