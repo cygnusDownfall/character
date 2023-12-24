@@ -9,4 +9,9 @@ public class hpBarInMap : MonoBehaviour
         UI = UI != null ? UI : GetComponentInChildren<Slider>();
         UI.value = value;
     }
+    private void Start()
+    {
+        UI = GetComponentInChildren<Slider>();
+
+    }
 }

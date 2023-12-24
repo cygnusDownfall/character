@@ -242,11 +242,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 321ca6618a12c8281a938a4985c9c8d4,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2494690455352087462}
+      addedObject: {fileID: 929564112024981412}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 321ca6618a12c8281a938a4985c9c8d4,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 929564112024981412}
+      addedObject: {fileID: 5022488059760274207}
   m_SourcePrefab: {fileID: 100100000, guid: 321ca6618a12c8281a938a4985c9c8d4, type: 3}
 --- !u!1 &649011260025210312 stripped
 GameObject:
@@ -271,7 +271,7 @@ MonoBehaviour:
   animator: {fileID: 1329990784870573752}
   defaultPosition: {fileID: 0}
   distanceMaxChase: 50
-  adjustYAxisTargetWhenMove: 0.7
+  adjustYAxisTargetWhenMove: 0.3
   onAttack:
     m_PersistentCalls:
       m_Calls: []
@@ -340,7 +340,9 @@ MonoBehaviour:
   mp: 0
   teamID: 3
   maxMP: 0
-  attack: 3
+  attack: 10
+  critRate: 5
+  critDmg: 50
   speed: 5
   chainEffect: []
   onChain:
@@ -423,7 +425,7 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   UseQuaternionSynchronization: 0
   UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
+  UseHalfFloatPrecision: 1
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
@@ -443,12 +445,25 @@ BoxCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 5, y: 5, z: 5}
   m_Center: {x: 2.5, y: 0, z: 0}
---- !u!65 &2494690455352087462
+--- !u!114 &929564112024981412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649011260025210312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e15d0e24a6e3a83d4b41190b6e5c64de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speedIncreasePerAttack: 0.2
+--- !u!65 &5022488059760274207
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -467,18 +482,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3, y: 3, z: 3}
+  m_Size: {x: 3, y: 2, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &929564112024981412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 649011260025210312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e15d0e24a6e3a83d4b41190b6e5c64de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speedIncreasePerAttack: 0.2
