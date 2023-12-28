@@ -12,6 +12,5 @@ public class hpBarInMap : MonoBehaviour
     private void Start()
     {
         UI = GetComponentInChildren<Slider>();
-
     }
 }

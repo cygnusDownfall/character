@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody), typeof(enemyInfo))]
+[RequireComponent(typeof(Rigidbody), typeof(enemyInfo), typeof(dissolve))]
 public class enemyBehavier : NetworkBehaviour
 {
     #region movement
@@ -122,9 +122,10 @@ public class enemyBehavier : NetworkBehaviour
         target = null;
         StartCoroutine(waitToSetReturnPos());
     }
-    private System.Collections.IEnumerator waitToSetReturnPos()
+    private System.Collections.IEnumerator waitToSetReturnPos(int delay = 3)
     {
         var mesh = GetComponentInChildren<MeshRenderer>();
+        yield return new WaitForSeconds(delay);
         while (IsMeshVisible(mesh))
         {
             yield return new WaitForSeconds(1);
@@ -150,12 +151,10 @@ public class enemyBehavier : NetworkBehaviour
     }
     public void OnDie(characterInfo info)
     {
-        //animator.SetBool("die", true);
-        var meshs = GetComponentsInChildren<MeshRenderer>();
-        foreach (var mesh in meshs)
-        {
-            mesh.gameObject.GetComponent<dissolve>().RunDisolve();
-        }
+        Debug.Log("Die");
+        target = null;
+        GetComponent<dissolve>().RunDisolve();
+        Destroy(gameObject, 5);
 
     }
     #endregion

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using Unity.Netcode;
+using UnityEngine;
 
 public class enemyInfo : characterInfo
 {
-    public enemyLevelSpecial enemyLevel;
+    public enemyLevelSpecial enemyLevel = enemyLevelSpecial.elite;
     public List<Effect> effectsWhenHit;
     public float rangeAttack = 1f;
     public DmgType nearAttackDmgType = DmgType.Physic;
@@ -11,15 +13,10 @@ public class enemyInfo : characterInfo
 
     void loadInfo()
     {
-        hp = new Unity.Netcode.NetworkVariable<int>(maxHP * (int)enemyLevel);
+        hp.Value = maxHP * (byte)enemyLevel;
         mp = maxMP;
-        attack *= (int)enemyLevel;
+        attack *= (byte)enemyLevel;
     }
-    public override void takeDamage(int dmg, DmgType dmgType)
-    {
-        base.takeDamage(dmg, dmgType);
-    }
-
     private void Start()
     {
         loadInfo();

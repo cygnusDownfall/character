@@ -61,8 +61,12 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _adjustAlphaMap: 0.275
     - _dirY: -1
+    - _dissolve: 0
     m_Colors:
     - _color: {r: 0, g: 0.09281969, b: 1, a: 0}
     - _dir: {r: 0, g: 0, b: 0, a: 0}
+    - _lineDissolveColor: {r: 3.4454622, g: 1.3484429, b: 1.3484429, a: 0}
+    - _scalingMask: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
