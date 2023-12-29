@@ -935,7 +935,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   duration: 2
-  timeStep: 0
+  timeStep: 0.1
 --- !u!4 &5460579185242552419 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -3600779313080499974, guid: 321ca6618a12c8281a938a4985c9c8d4,
