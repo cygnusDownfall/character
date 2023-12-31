@@ -56,6 +56,8 @@ public class playerInfo : characterInfo
     private void onHpChanged(int previousValue, int newValue)
     {
         Debug.Log("hp changed:from " + previousValue + " to " + newValue);
+        Debug.Log("hp change Owner of playerinfo is: " + OwnerClientId);
+        if (!IsOwner) return;
         hpBar.Instance.Value = newValue / (float)maxHP;
     }
     #endregion
