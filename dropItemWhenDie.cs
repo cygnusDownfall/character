@@ -16,7 +16,7 @@ public class dropItemWhenDie : MonoBehaviour
     {
         foreach (var item in items)
         {
-            if (itemDropPooling.Instance.TakeOut(item.name, transform.position, transform.rotation) != default) continue;
+            if (itemPooling.Instance.TakeOut(item.name, transform.position, transform.rotation) != default) continue;
             Instantiate(item, transform.position, transform.rotation);
         }
     }
