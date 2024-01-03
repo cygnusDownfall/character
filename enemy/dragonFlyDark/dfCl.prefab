@@ -362,7 +362,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fdfea1f838247c40921a07afedde962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Space: 0
   m_Property:
     m_Name: Transform
   Target: {fileID: 5460579185242552419}
@@ -564,9 +563,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: dfCl
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 321ca6618a12c8281a938a4985c9c8d4,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 7209741164163208154, guid: 321ca6618a12c8281a938a4985c9c8d4,
         type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
+      propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 86532b1f4a4605ed29fd9d8b709a5242, type: 2}
     m_RemovedComponents: []
@@ -673,10 +677,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GlobalObjectIdHash: 951099334
   AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 1
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
   DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
 --- !u!54 &8256787456550065073
@@ -761,7 +761,7 @@ MonoBehaviour:
   farAttackDmgType: 5
 --- !u!95 &1037032618896588980
 Animator:
-  serializedVersion: 7
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -775,7 +775,6 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -930,12 +929,8 @@ MonoBehaviour:
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
   InLocalSpace: 0
   Interpolate: 1
-  SlerpPosition: 0
 --- !u!4 &5460579185242552419 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -3600779313080499974, guid: 321ca6618a12c8281a938a4985c9c8d4,
