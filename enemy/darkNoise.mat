@@ -53,8 +53,10 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _dissolve: 0
     - _scaleNoise: 100
     - _scalePosNoise: 0
     m_Colors:
-    - _color: {r: 0.06048584, g: 0.06048584, b: 0.06048584, a: 1}
+    - _color: {r: 0.003780365, g: 0.003780365, b: 0.003780365, a: 1}
+    - _hightlightColorDie: {r: 65536, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
