@@ -13,7 +13,8 @@ public class enemyInfo : characterInfo
 
     void loadInfo()
     {
-        hp.Value = maxHP * (byte)enemyLevel;
+        maxHP= maxHP * (byte)enemyLevel;
+        hp.Value = maxHP;
         mp = maxMP;
         attack *= (byte)enemyLevel;
     }
