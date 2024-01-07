@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class enemyInfo : characterInfo
 {
-    public enemyLevelSpecial enemyLevel = enemyLevelSpecial.elite;
+    public enemyLevelSpecial enemyLevel = enemyLevelSpecial.normal;
     public Effect[] effectsWhenHit;
     public float rangeAttack = 1f;
     public DmgType nearAttackDmgType = DmgType.Physic;
@@ -13,7 +13,8 @@ public class enemyInfo : characterInfo
 
     void loadInfo()
     {
-        hp.Value = maxHP * (byte)enemyLevel;
+        maxHP = maxHP * (byte)enemyLevel;
+        hp.Value = maxHP;
         mp = maxMP;
         attack *= (byte)enemyLevel;
     }

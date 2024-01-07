@@ -12,6 +12,7 @@ public class playerInfo : characterInfo
     public override void healing(int heal)
     {
         hp.Value += Convert.ToInt32(heal * (healScale / 100f));
+        if(hp.Value>maxHP) hp.Value = maxHP;
     }
 
     public override void addChain(Effect effect)

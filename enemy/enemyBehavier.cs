@@ -158,7 +158,7 @@ public class enemyBehavier : NetworkBehaviour
         Debug.Log("Die");
         target = null;
         GetComponent<dissolve>().RunDisolve();
-        Destroy(gameObject, 5);
+        Destroy(gameObject, 2);
 
     }
     #endregion
