@@ -15,7 +15,7 @@ public class enemyBehavier : NetworkBehaviour
     public AudioSource moveAudioSource;
     enemyInfo info;
     public Unity.Netcode.Components.NetworkAnimator animator;
-    [SerializeField] Transform defaultPosition;
+    public Transform defaultPosition;
     CalcPositionMoveJob calcPos;
     JobHandle handle;
     NativeArray<float3> dir;
