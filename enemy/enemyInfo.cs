@@ -5,7 +5,7 @@ using UnityEngine;
 public class enemyInfo : characterInfo
 {
     public enemyLevelSpecial enemyLevel = enemyLevelSpecial.elite;
-    public List<Effect> effectsWhenHit;
+    public Effect[] effectsWhenHit;
     public float rangeAttack = 1f;
     public DmgType nearAttackDmgType = DmgType.Physic;
     public float rangeAttackFar = 5f;

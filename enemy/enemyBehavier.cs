@@ -120,10 +120,13 @@ public class enemyBehavier : NetworkBehaviour
     public void returnToPosition()
     {
         target = null;
+
         StartCoroutine(waitToSetReturnPos());
     }
     private System.Collections.IEnumerator waitToSetReturnPos(int delay = 3)
     {
+        var rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
         var mesh = GetComponentInChildren<MeshRenderer>();
         yield return new WaitForSeconds(delay);
         while (IsMeshVisible(mesh))
@@ -137,6 +140,7 @@ public class enemyBehavier : NetworkBehaviour
             transform.position = defaultPosition.position;
             transform.rotation = defaultPosition.rotation;
         }
+        rb.isKinematic = false;
     }
     private bool IsMeshVisible(MeshRenderer targetMeshRenderer)
     {
